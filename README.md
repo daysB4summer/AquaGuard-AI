@@ -58,6 +58,28 @@ Model evaluation uses chronological data splitting and a temporal gap to reduce 
 
 **Important limitation:** The earlier Logistic Regression model achieved only 57.0% balanced accuracy on a later test period. Random Forest v4 has not yet undergone an equivalent independent final evaluation. Validation performance should not be interpreted as deployment performance.
 
+### Independent Test Evaluation
+
+Random Forest v4 was evaluated on 1,580 later chronological observations.
+
+| Metric | Test Result |
+|---|---|
+| Accuracy | 87.1% |
+| Balanced Accuracy | 65.9% |
+| Precision | 88.1% |
+| Recall | 97.7% |
+| F1-Score | 92.7% |
+
+**Key Finding:** The model achieved high recall for labelled
+fault-window observations but generated a substantial number
+of false alarms.
+
+Balanced accuracy decreased from 72.6% during validation
+to 65.9% on the independent test period.
+
+These findings highlight the importance of chronological
+evaluation, class imbalance, and model generalisation.
+
 ## 📈 Interactive Dashboard
 
 The Streamlit dashboard includes four sections:
