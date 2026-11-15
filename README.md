@@ -7,6 +7,10 @@
 
 Explore the interactive dashboard to monitor historical water infrastructure sensor data, examine potential fault windows, and view machine-learning predictions.
 
+## 🖥️ Dashboard Preview
+
+![AquaGuard AI Dashboard](assets/dashboard-overview.png)
+
 AquaGuard AI is an end-to-end Data Science portfolio project that uses machine learning to analyse historical water infrastructure sensor data and identify potential fault windows.
 
 The project combines data analysis, predictive modelling, model evaluation, and an interactive Streamlit dashboard.
