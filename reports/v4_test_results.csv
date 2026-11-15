@@ -1,0 +1,2 @@
+model,dataset,observations,accuracy,balanced_accuracy,precision,recall,f1_score
+Random Forest v4,Independent chronological test,1580,0.8708860759493671,0.6590563691627521,0.8808219178082192,0.9772036474164134,0.9265129682997119

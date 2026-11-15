@@ -411,6 +411,7 @@ elif page == "🚨 AI Risk Analysis":
         "This dashboard does not provide live fault alerts."
     )
 
+
 # ==================================================
 # PAGE 4: MODEL PERFORMANCE
 # ==================================================
@@ -419,13 +420,17 @@ elif page == "🤖 Model Performance":
 
     st.header("🤖 Machine Learning Model Performance")
 
-    comparison_path = (
-        BASE_DIR / "reports" / "model_comparison.csv"
-    )
+    # Load evaluation results
+    comparison_path = BASE_DIR / "reports" / "model_comparison.csv"
+    test_results_path = BASE_DIR / "reports" / "v4_test_results.csv"
 
     comparison = pd.read_csv(comparison_path)
 
-    st.subheader("Model Comparison")
+    # ==================================================
+    # SECTION 1: MODEL COMPARISON
+    # ==================================================
+
+    st.subheader("📊 Model Comparison")
 
     st.dataframe(
         comparison,
@@ -434,11 +439,15 @@ elif page == "🤖 Model Performance":
 
     st.divider()
 
-    st.subheader("Validation Balanced Accuracy")
+    # ==================================================
+    # SECTION 2: VALIDATION BALANCED ACCURACY
+    # ==================================================
 
-    fig = go.Figure()
+    st.subheader("📈 Validation Balanced Accuracy")
 
-    fig.add_trace(
+    fig_validation = go.Figure()
+
+    fig_validation.add_trace(
         go.Bar(
             x=comparison["Model"],
             y=comparison["Balanced Accuracy"],
@@ -448,7 +457,7 @@ elif page == "🤖 Model Performance":
         )
     )
 
-    fig.update_layout(
+    fig_validation.update_layout(
         yaxis_title="Balanced Accuracy",
         yaxis_range=[0, 1],
         template="plotly_dark",
@@ -456,18 +465,136 @@ elif page == "🤖 Model Performance":
     )
 
     st.plotly_chart(
-        fig,
+        fig_validation,
         use_container_width=True,
-        key="model_comparison_chart"
+        key="model_validation_chart"
     )
 
     st.divider()
 
-    st.subheader("Selected Model")
+    # ==================================================
+    # SECTION 3: INDEPENDENT TEST PERFORMANCE
+    # ==================================================
+
+    st.subheader("🧪 Independent Test Performance")
+
+    if test_results_path.exists():
+
+        test_results = pd.read_csv(test_results_path)
+        results = test_results.iloc[0]
+
+        st.caption(
+            "Random Forest v4 evaluated on 1,580 independent "
+            "chronological test observations."
+        )
+
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric(
+            "Accuracy",
+            f"{results['accuracy']:.1%}"
+        )
+
+        col2.metric(
+            "Balanced Accuracy",
+            f"{results['balanced_accuracy']:.1%}"
+        )
+
+        col3.metric(
+            "F1-Score",
+            f"{results['f1_score']:.1%}"
+        )
+
+        col4, col5 = st.columns(2)
+
+        col4.metric(
+            "Precision",
+            f"{results['precision']:.1%}"
+        )
+
+        col5.metric(
+            "Recall",
+            f"{results['recall']:.1%}"
+        )
+
+        st.divider()
+
+        # ==================================================
+        # SECTION 4: VALIDATION VS TEST COMPARISON
+        # ==================================================
+
+        st.subheader("📉 Validation vs Independent Test")
+
+        validation_balanced_accuracy = 0.726
+        test_balanced_accuracy = results["balanced_accuracy"]
+
+        fig_comparison = go.Figure()
+
+        fig_comparison.add_trace(
+            go.Bar(
+                x=["Validation", "Independent Test"],
+                y=[
+                    validation_balanced_accuracy,
+                    test_balanced_accuracy
+                ],
+                marker_color=["#38BDF8", "#F59E0B"],
+                text=[
+                    f"{validation_balanced_accuracy:.1%}",
+                    f"{test_balanced_accuracy:.1%}"
+                ],
+                textposition="outside"
+            )
+        )
+
+        fig_comparison.update_layout(
+            yaxis_title="Balanced Accuracy",
+            yaxis_range=[0, 1],
+            template="plotly_dark",
+            height=420
+        )
+
+        st.plotly_chart(
+            fig_comparison,
+            use_container_width=True,
+            key="validation_vs_test_chart"
+        )
+
+        difference = (
+            validation_balanced_accuracy - test_balanced_accuracy
+        ) * 100
+
+        st.info(
+            f"Balanced accuracy decreased by "
+            f"{difference:.1f} percentage points "
+            "between validation and independent testing."
+        )
+
+        st.warning(
+            "Although the model detects most labelled fault-window "
+            "observations, it incorrectly flags many normal "
+            "observations. High overall accuracy is also influenced "
+            "by the imbalance between the two classes."
+        )
+
+    else:
+
+        st.warning(
+            "Independent test results are not available. "
+            "Please generate reports/v4_test_results.csv "
+            "using the evaluation notebook."
+        )
+
+    st.divider()
+
+    # ==================================================
+    # SECTION 5: SELECTED MODEL
+    # ==================================================
+
+    st.subheader("🏆 Selected Model")
 
     st.success(
-        "Random Forest v4 achieved 72.6% balanced accuracy "
-        "on the development validation dataset."
+        "Random Forest v4 was selected based on its "
+        "72.6% validation balanced accuracy."
     )
 
     st.write(
@@ -480,14 +607,14 @@ elif page == "🤖 Model Performance":
 
     st.write(
         "**Additional Features:** Groundwater missingness "
-        "and sensor missingness indicators"
+        "and sensor missingness indicators."
     )
 
     st.warning(
-        "The selected model is a research prototype. "
-        "Performance on later chronological data remains "
-        "a concern, and additional independent validation "
-        "is needed before deployment."
+        "AquaGuard AI is a research prototype, not a "
+        "production-ready infrastructure fault detection system. "
+        "Further testing, calibration, and improvements to "
+        "normal-condition detection are required."
     )
 
 # ==================================================
