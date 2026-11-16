@@ -40,3 +40,28 @@ def test_target_is_binary():
     df = pd.read_csv(DATA_PATH)
 
     assert set(df["fault_d7"].dropna().unique()).issubset({0, 1})
+
+
+
+def test_model_can_make_predictions():
+    saved = joblib.load(MODEL_PATH)
+
+    model = saved["model"]
+    features = saved["features"]
+    medians = saved["medians"]
+
+    df = pd.read_csv(DATA_PATH)
+
+    df["gw_missing"] = (
+        df["gw_lvl_site2_anomaly_score"].isna().astype(int)
+    )
+    df["vigor_missing"] = (
+        df["326416_ws_vigor"].isna().astype(int)
+    )
+
+    X = df[features].head(10).fillna(medians)
+
+    predictions = model.predict(X)
+
+    assert len(predictions) == 10
+    assert set(predictions).issubset({0, 1})
