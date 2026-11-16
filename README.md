@@ -3,10 +3,6 @@
 [![AquaGuard AI Tests](https://github.com/daysB4summer/AquaGuard-AI/actions/workflows/tests.yml/badge.svg)](https://github.com/daysB4summer/AquaGuard-AI/actions/workflows/tests.yml)
 
 ### Intelligent Water Infrastructure Fault-Window Monitoring Using Machine Learning
-
-[![AquaGuard AI Tests](https://github.com/daysB4summer/AquaGuard-AI/actions/workflows/tests.yml/badge.svg)](https://github.com/daysB4summer/AquaGuard-AI/actions/workflows/tests.yml)s
-
-
 ## 🌐 Live Application
 
 🚀 **[Launch AquaGuard AI Dashboard](https://aquaguard-ai-monitor.streamlit.app)**
