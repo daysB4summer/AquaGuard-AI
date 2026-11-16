@@ -105,6 +105,44 @@ streamlit run dashboard/app.py
 
 The dashboard will normally be available at `http://localhost:8501`.
 
+
+## 🔬 Reproducing Model Evaluation
+
+AquaGuard AI includes a standalone Python script for evaluating
+the saved Random Forest v4 model on an independent chronological
+test dataset.
+
+After installing the project dependencies, run:
+
+```bash
+python src/evaluate_model.py
+```
+
+The script:
+- Loads the processed sensor dataset.
+- Recreates the chronological 80/20 train-test split.
+- Excludes the first 168 test observations as a temporal gap.
+- Loads the saved Random Forest v4 model and preprocessing settings.
+- Calculates classification metrics and a confusion matrix.
+- Saves the results to `reports/v4_test_results.csv`.
+
+### Independent Test Results
+
+| Metric | Result |
+|---|---|
+| Test observations | 1,580 |
+| Accuracy | 87.1% |
+| Balanced accuracy | 65.9% |
+| Precision | 88.1% |
+| Recall | 97.7% |
+| F1-score | 92.7% |
+
+**Limitation:** The model identifies most labelled fault-window
+observations but produces a substantial number of false alarms.
+It remains a research prototype rather than a production-ready
+infrastructure monitoring system.
+
+
 ## ⚠️ Limitations
 
 - The dataset contains fault-window labels, not necessarily exact fault onset times or confirmed individual leaks.
