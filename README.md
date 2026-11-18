@@ -58,7 +58,10 @@ Random Forest v4 was selected as the current dashboard model using a classificat
 
 Model evaluation uses chronological data splitting and a temporal gap to reduce potential overlap between fault-window labels.
 
-**Important limitation:** The earlier Logistic Regression model achieved only 57.0% balanced accuracy on a later test period. Random Forest v4 has not yet undergone an equivalent independent final evaluation. Validation performance should not be interpreted as deployment performance.
+**Evaluation note:** Random Forest v4 was independently evaluated on 1,580 later chronological observations, achieving 65.9% balanced accuracy compared with 72.6% during validation. The earlier Logistic Regression model achieved 57.0% balanced accuracy on its later test period. These results demonstrate that validation performance does not necessarily generalise to future observations.
+
+The models remain research prototypes and have not been validated for real-world operational deployment.
+
 
 ### Independent Test Evaluation
 
@@ -93,19 +96,62 @@ The Streamlit dashboard includes four sections:
 
 The dashboard is based on historical data and does not currently connect to live infrastructure sensors.
 
+
 ## 🚀 Running the Project Locally
 
-Clone the repository and open the project folder.
+### 1. Clone the repository
 
-Create and activate a Python virtual environment, then install the required dependencies.
+```bash
+git clone https://github.com/daysB4summer/AquaGuard-AI.git
+cd AquaGuard-AI
+```
 
-Start the dashboard using:
+### 2. Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment:
+
+**Windows (PowerShell):**
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+**macOS/Linux:**
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### 4. Launch the dashboard
 
 ```bash
 streamlit run dashboard/app.py
 ```
 
-The dashboard will normally be available at `http://localhost:8501`.
+Open http://localhost:8501 in your browser.
+
+### 5. Run automated tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+The project includes seven automated tests covering
+model loading, dataset integrity, prediction functionality,
+and reproducibility of evaluation results.
+
+GitHub Actions automatically runs these tests whenever
+changes are pushed to the main branch or a pull request
+targets main.
+
 
 
 ## 🔬 Reproducing Model Evaluation
@@ -127,22 +173,6 @@ The script:
 - Loads the saved Random Forest v4 model and preprocessing settings.
 - Calculates classification metrics and a confusion matrix.
 - Saves the results to `reports/v4_test_results.csv`.
-
-### Independent Test Results
-
-| Metric | Result |
-|---|---|
-| Test observations | 1,580 |
-| Accuracy | 87.1% |
-| Balanced accuracy | 65.9% |
-| Precision | 88.1% |
-| Recall | 97.7% |
-| F1-score | 92.7% |
-
-**Limitation:** The model identifies most labelled fault-window
-observations but produces a substantial number of false alarms.
-It remains a research prototype rather than a production-ready
-infrastructure monitoring system.
 
 
 ## ⚠️ Limitations
